@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Remark</title>
+</head>
+<body>
+<h1>Update Remark</h1>
+
+<form id="updateForm">
+  <label for="configId">Enter Configuration ID:</label>
+  <input type="text" id="configId" name="configId" placeholder="Enter Config ID" required>
+
+  <label for="remark">Enter Remark:</label>
+  <textarea id="remark" name="remark" placeholder="Enter Remark" rows="4" required></textarea>
+
+  <button type="button" onclick="updateRemark()">Submit</button>
+</form>
+
+<div id="updateResult"></div>
+
+<script>
+        function updateRemark() {
+            const configId = document.getElementById("configId").value;
+            const remark = document.getElementById("remark").value;
+
+            fetch(`/api/configurations/${configId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ remark: remark })
+            })
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById("updateResult").innerHTML = '<p>Remark updated successfully!</p>';
+                } else {
+                    throw new Error(`Failed to update remark. Status: ${response.status}`);
+                }
+            })
+            .catch(error => {
+                console.error('Error updating remark:', error.message);
+                document.getElementById("updateResult").innerHTML = '<p>Error updating remark. Please try again.</p>';
+            });
+        }
+    </script>
+</body>
+</html>
